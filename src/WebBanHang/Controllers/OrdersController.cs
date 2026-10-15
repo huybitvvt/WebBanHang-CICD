@@ -8,7 +8,14 @@ namespace WebBanHang.Controllers;
 
 public class OrdersController(StoreDbContext db, OrderService orders) : Controller
 {
-    public async Task<IActionResult> Index() => View(await db.Orders.OrderByDescending(o => o.Id).ToListAsync());
+    public async Task<IActionResult> Index(string? status)
+    {
+        var query = db.Orders.AsQueryable();
+        if (status is "Mới" or "Hoàn tất" or "Đã hủy") query = query.Where(o => o.Status == status);
+        else status = null;
+        ViewBag.Status = status;
+        return View(await query.OrderByDescending(o => o.Id).ToListAsync());
+    }
     public async Task<IActionResult> Details(int id) =>
         await db.Orders.Include(o => o.Items).SingleOrDefaultAsync(o => o.Id == id) is { } order ? View(order) : NotFound();
     public async Task<IActionResult> Create() { await ProductsAsync(); return View(new CreateOrderInput()); }
