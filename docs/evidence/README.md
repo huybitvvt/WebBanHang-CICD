@@ -7,7 +7,7 @@ Các ảnh PNG đều là ảnh chụp trình duyệt Edge thật. Ảnh 01–05
 - `03-don-hang-180000.png`: đơn hai sản phẩm giá 100.000, giảm 10%, tổng 180.000.
 - `04-tong-quan-mobile.png`: dashboard 375px.
 - `05-tao-don-mobile.png`: form tạo đơn 375px.
-- `06-jenkins-stage-view.png`: lịch sử ba lần chạy thật (#1 SUCCESS, #2/#3 FAILURE); Deploy/Verify ở build #1 bị tắt vì máy chưa có IIS.
+- `06-jenkins-stage-view.png`: lịch sử chạy thật; lượt cuối #4 SUCCESS, #5/#6 FAILURE; Deploy/Verify ở build #4 bị tắt vì máy chưa có IIS.
 - `07-jenkins-job-config.png`: Job WebBanHang-CICD, GitHub SCM, main và Jenkinsfile.
 - `08-jenkins-build-failure.png`: compiler phát hiện lỗi cú pháp trên nhánh demo/build-failure.
 - `09-jenkins-test-failure.png`: Build thành công nhưng test tính giảm giá thất bại.

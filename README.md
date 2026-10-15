@@ -4,7 +4,7 @@
 
 Repository: https://github.com/huybitvvt/WebBanHang-CICD (private).
 
-**Bắt đầu đọc [hướng dẫn demo trên lớp](docs/HUONG-DAN-DEMO.md).** Có đầy đủ chuẩn bị môi trường, lời thuyết trình, lệnh thao tác và ba tình huống thành công/thất bại.
+**Bắt đầu đọc [demo nhanh trên máy này](docs/DEMO-NHANH.md).** [Hướng dẫn đầy đủ](docs/HUONG-DAN-DEMO.md) có chuẩn bị IIS, lời thuyết trình, lệnh thao tác và ba tình huống thành công/thất bại.
 
 Trên máy hiện tại có thể nhấp đúp **CHAY-DEMO.cmd** để chạy. Giữ cửa sổ mở và truy cập URL bên dưới.
 

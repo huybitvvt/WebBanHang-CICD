@@ -27,10 +27,12 @@ Nhật ký/TRX sinh tại `artifacts/` (không đưa output build vào Git). Ả
 | Nhánh sai tính tiền | Build PASS, Test FAIL 4/28 đúng dự kiến; kỳ vọng 180000, thực tế 220000; bản Kestrel nền giữ nguyên |
 | Đồng bộ file và rollback deploy | 3/3 kiểm tra Node PASS (gồm test cha), dùng robocopy thật và HTTP endpoint giả lập; giữ App_Data, logs, config Production, thay code và khôi phục code khi version sai |
 | Verify trên bản publish Kestrel | PASS: health/database, homepage=200, CSS=200 dưới /webbanhang |
-| Jenkins Job thực tế | PASS: job WebBanHang-CICD lấy mã từ GitHub private, build #1 main SUCCESS, #2 lỗi cú pháp FAILURE tại Build, #3 sai công thức FAILURE tại Test; Deploy/Verify tắt vì chưa có IIS |
+| Jenkins Job thực tế | PASS: lượt cuối #4 main SUCCESS, #5 lỗi cú pháp FAILURE tại Build, #6 sai công thức FAILURE tại Test; lấy mã từ GitHub private; Deploy/Verify tắt vì chưa có IIS. Lịch sử #1–#3 cũng có đủ ba kết quả tương ứng |
 | Khởi động lại Jenkins | Cấu hình đăng nhập, Credentials và lịch sử build được lưu; khởi động qua CHAY-JENKINS.cmd/scripts/Start-Jenkins.ps1 |
+| Bản publish do Jenkins tạo | Chạy thật bằng Kestrel, Healthy, version 1.0.4+70478451f3037492c26dfa10896742ee6cbb9f30; sau #5 và #6 vẫn Healthy và version không đổi |
+| Theo dõi main sau nhánh lỗi | Đã kiểm tra metadata Jenkins: checkout main có polling baseline; checkout nhánh lỗi không có baseline, không thay nhánh đang được theo dõi |
 | IIS thực tế | Chưa chạy; cần máy hỗ trợ IIS + quyền admin |
-| Webhook GitHub qua Internet | Chưa chạy; cần Jenkins, ngrok và secret |
+| Webhook GitHub qua Internet | Chưa xác minh; chờ người dùng cấu hình ngrok. Jenkins và relay đã có |
 
 ## Ba tình huống phải chụp trên Jenkins/IIS
 
