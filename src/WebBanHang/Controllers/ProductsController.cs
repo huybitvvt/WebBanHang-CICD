@@ -8,12 +8,14 @@ namespace WebBanHang.Controllers;
 
 public class ProductsController(StoreDbContext db) : Controller
 {
-    public async Task<IActionResult> Index(string? q, int? categoryId)
+    public async Task<IActionResult> Index(string? q, int? categoryId, bool lowStock = false)
     {
         var products = db.Products.Include(p => p.Category).AsQueryable();
         if (!string.IsNullOrWhiteSpace(q)) products = products.Where(p => p.Name.Contains(q));
         if (categoryId.HasValue) products = products.Where(p => p.CategoryId == categoryId);
+        if (lowStock) products = products.Where(p => p.Stock <= 8);
         ViewBag.Query = q; ViewBag.CategoryId = categoryId;
+        ViewBag.LowStock = lowStock;
         await CategoriesAsync(categoryId);
         return View(await products.OrderBy(p => p.Name).ToListAsync());
     }
