@@ -9,7 +9,7 @@ pipeline {
     }
     parameters {
         choice(name: 'SOURCE_BRANCH', choices: ['main', 'demo/build-failure', 'demo/test-failure'], description: 'Only main can deploy. Failure branches are for classroom demonstrations.')
-        booleanParam(name: 'DEPLOY_TO_IIS', defaultValue: true, description: 'Requires IIS + Hosting Bundle + deployment permissions on this Windows agent.')
+        booleanParam(name: 'DEPLOY_TO_IIS', defaultValue: env.WEBBANHANG_CI_ONLY != 'true', description: 'Requires IIS + Hosting Bundle + deployment permissions on this Windows agent.')
     }
     triggers { githubPush() }
     environment {
