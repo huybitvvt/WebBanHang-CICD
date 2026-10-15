@@ -1,0 +1,8 @@
+@model Product
+@{ ViewData["Title"] = Model.Id == 0 ? "Thêm sản phẩm" : "Sửa sản phẩm"; }
+<a class="back-link" asp-action="Index">← Sản phẩm</a><div class="page-heading"><div><p class="eyebrow">THÔNG TIN SẢN PHẨM</p><h1>@ViewData["Title"]</h1></div></div>
+<form asp-action="Save" method="post" class="panel form-panel"><input asp-for="Id" type="hidden" /><div asp-validation-summary="All" class="validation" role="alert"></div>
+<div class="field"><label asp-for="Name"></label><input asp-for="Name" required maxlength="120" /></div>
+<div class="field"><label asp-for="CategoryId"></label><select asp-for="CategoryId" asp-items="ViewBag.Categories" required><option value="">Chọn danh mục</option></select></div>
+<div class="form-grid"><div class="field"><label asp-for="Price"></label><input name="Price" id="Price" value="@Model.Price.ToString("0", System.Globalization.CultureInfo.InvariantCulture)" type="number" min="1000" max="1000000000" step="1000" required /></div><div class="field"><label asp-for="Stock"></label><input asp-for="Stock" type="number" min="0" max="1000000" required /></div></div>
+<div class="form-actions"><button class="button primary" type="submit">Lưu sản phẩm</button><a class="button" asp-action="Index">Hủy</a></div></form>

@@ -1,0 +1,21 @@
+@model DashboardViewModel
+@inject IConfiguration Configuration
+@{ ViewData["Title"] = "Tổng quan"; }
+<div class="page-heading"><div><p class="eyebrow">TỔNG QUAN CỬA HÀNG</p><h1>Mọi thứ trong tầm tay<span class="accent">.</span></h1><p class="muted">@Configuration["Store:Announcement"]</p></div><a class="button primary" asp-controller="Orders" asp-action="Create">+ Tạo đơn hàng</a></div>
+<div class="stats-grid">
+    <article class="stat"><span>Giá trị đơn hàng</span><strong>@Model.Revenue.ToString("N0") <small>đ</small></strong><span class="stat-note">Không gồm đơn đã hủy</span></article>
+    <article class="stat"><span>Đơn hàng</span><strong>@Model.OrderCount.ToString("D2")</strong><span class="stat-note">Tất cả trạng thái</span></article>
+    <article class="stat"><span>Sản phẩm</span><strong>@Model.ProductCount.ToString("D2")</strong><a asp-controller="Products" asp-action="Index">Xem kho hàng →</a></article>
+    <article class="stat"><span>Danh mục</span><strong>@Model.CategoryCount.ToString("D2")</strong><a asp-controller="Categories" asp-action="Index">Quản lý danh mục →</a></article>
+</div>
+<div class="dashboard-grid">
+    <section class="panel"><div class="panel-heading"><div><p class="eyebrow">HOẠT ĐỘNG</p><h2>Đơn hàng gần đây</h2></div><a asp-controller="Orders" asp-action="Index">Xem tất cả →</a></div>
+    @if (Model.RecentOrders.Count == 0) { <div class="empty"><span class="empty-number">01 /</span><h3>Sẵn sàng cho đơn hàng đầu tiên</h3><p>Sản phẩm mẫu đã có trong kho. Tạo đơn để bắt đầu quản lý bán hàng.</p><a class="button" asp-controller="Orders" asp-action="Create">Tạo đơn đầu tiên →</a></div> }
+    else { <div class="table-wrap"><table><thead><tr><th>Mã đơn</th><th>Khách hàng</th><th>Tổng tiền</th><th>Trạng thái</th></tr></thead><tbody>@foreach (var o in Model.RecentOrders) { <tr><td><a asp-controller="Orders" asp-action="Details" asp-route-id="@o.Id">#DH@(o.Id.ToString("D4"))</a></td><td>@o.CustomerName</td><td class="money">@o.Total.ToString("N0") đ</td><td><span class="badge">@o.Status</span></td></tr> }</tbody></table></div> }
+    </section>
+    <section class="panel"><div class="panel-heading"><div><p class="eyebrow">CẦN CHÚ Ý</p><h2>Sản phẩm sắp hết</h2></div><span class="count">@Model.LowStockProducts.Count</span></div><div class="stock-list">
+    @foreach (var p in Model.LowStockProducts) { <a class="stock-item" asp-controller="Products" asp-action="Edit" asp-route-id="@p.Id"><span class="product-tile" aria-hidden="true">@p.Name[..1]</span><span><strong>@p.Name</strong><small>@p.Category?.Name</small></span><span class="stock-count">@p.Stock<small>còn lại</small></span></a> }
+    @if (Model.LowStockProducts.Count == 0) { <p class="muted">Tồn kho hiện đủ cho các sản phẩm.</p> }
+    </div><div class="panel-foot">Ngưỡng theo dõi: 8 sản phẩm trở xuống.</div></section>
+</div>
+<section class="pipeline-banner"><div><p class="eyebrow">QUY TRÌNH TRIỂN KHAI</p><h2>Một thay đổi. Một quy trình tự động.</h2></div><div class="pipeline-steps"><span>GitHub</span><b>→</b><span>Jenkins</span><b>→</b><span>Build & Test</span><b>→</b><span>IIS</span></div></section>

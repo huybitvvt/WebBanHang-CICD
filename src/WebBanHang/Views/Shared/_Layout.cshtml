@@ -1,0 +1,37 @@
+@using System.Reflection
+@{ var current = ViewContext.RouteData.Values["controller"]?.ToString(); }
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] · WebBanHang</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <a class="skip-link" href="#main">Đến nội dung chính</a>
+    <aside class="sidebar">
+        <a class="brand" asp-controller="Home" asp-action="Index"><span class="brand-mark" aria-hidden="true">W</span> WebBanHang<span class="brand-dot">.</span></a>
+        <div class="workspace-label">KHÔNG GIAN QUẢN LÝ</div>
+        <nav aria-label="Điều hướng chính">
+            <a class="@(current == "Home" ? "active" : "")" asp-controller="Home" asp-action="Index"><span aria-hidden="true">01</span> Tổng quan</a>
+            <a class="@(current == "Products" ? "active" : "")" asp-controller="Products" asp-action="Index"><span aria-hidden="true">02</span> Sản phẩm</a>
+            <a class="@(current == "Categories" ? "active" : "")" asp-controller="Categories" asp-action="Index"><span aria-hidden="true">03</span> Danh mục</a>
+            <a class="@(current == "Orders" ? "active" : "")" asp-controller="Orders" asp-action="Index"><span aria-hidden="true">04</span> Đơn hàng</a>
+        </nav>
+        <div class="sidebar-note"><span class="eyebrow">BÀI THỰC HÀNH 05</span><strong>Từ mã nguồn<br />đến triển khai.</strong><p>ASP.NET Core 8<br />GitHub → Jenkins → IIS</p></div>
+        <div class="sidebar-footer">ABC COMPANY <span>2026</span></div>
+    </aside>
+    <div class="shell">
+        <header class="topbar"><span>Hệ thống quản lý bán hàng</span><span class="environment">Bản thực hành <span class="avatar" aria-hidden="true">AB</span></span></header>
+        <main id="main" tabindex="-1">
+            @if (TempData["Success"] is string success) { <div class="notice success" role="status">@success</div> }
+            @if (TempData["Error"] is string error) { <div class="notice error" role="alert">@error</div> }
+            @RenderBody()
+        </main>
+        <footer class="footer"><span>WebBanHang · Nhóm thực hành CI/CD</span><span>Version @(typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion)</span></footer>
+    </div>
+    <script src="~/js/site.js" asp-append-version="true" defer></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

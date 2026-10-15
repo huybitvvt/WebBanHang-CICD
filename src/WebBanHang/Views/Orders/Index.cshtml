@@ -1,0 +1,7 @@
+@model List<SalesOrder>
+@{ ViewData["Title"] = "Đơn hàng"; }
+<div class="page-heading"><div><p class="eyebrow">HOẠT ĐỘNG BÁN HÀNG</p><h1>Đơn hàng<span class="accent">.</span></h1><p class="muted">Theo dõi khách hàng, giá trị và trạng thái xử lý.</p></div><a class="button primary" asp-action="Create">+ Tạo đơn hàng</a></div>
+<section class="panel"><div class="table-wrap"><table><thead><tr><th>Mã đơn</th><th>Khách hàng</th><th>Ngày tạo (VN)</th><th>Tổng tiền</th><th>Trạng thái</th><th></th></tr></thead><tbody>
+@foreach (var o in Model) { <tr><td><strong>#DH@(o.Id.ToString("D4"))</strong></td><td>@o.CustomerName</td><td>@o.CreatedAt.AddHours(7).ToString("dd/MM/yyyy HH:mm")</td><td class="money">@o.Total.ToString("N0") đ</td><td><span class="badge">@o.Status</span></td><td><a asp-action="Details" asp-route-id="@o.Id">Chi tiết →</a></td></tr> }
+@if (Model.Count == 0) { <tr><td colspan="6" class="empty-cell">Chưa có đơn hàng. Tạo đơn đầu tiên để bắt đầu.</td></tr> }
+</tbody></table></div></section>

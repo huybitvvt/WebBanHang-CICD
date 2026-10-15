@@ -1,0 +1,17 @@
+**/bin/
+**/obj/
+**/App_Data/
+.tools/
+.local/
+artifacts/
+TestResults/
+.vs/
+.idea/
+*.user
+*.db
+*.db-shm
+*.db-wal
+appsettings.Production.json
+*.log
+.env
+/*.pdf

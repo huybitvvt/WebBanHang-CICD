@@ -1,0 +1,7 @@
+@model Category
+@{ ViewData["Title"] = Model.Id == 0 ? "Thêm danh mục" : "Sửa danh mục"; }
+<a class="back-link" asp-action="Index">← Danh mục</a><div class="page-heading"><div><p class="eyebrow">DANH MỤC SẢN PHẨM</p><h1>@ViewData["Title"]</h1></div></div>
+<form asp-action="Save" method="post" class="panel form-panel"><input asp-for="Id" type="hidden" /><div asp-validation-summary="All" class="validation" role="alert"></div>
+<div class="field"><label asp-for="Name"></label><input asp-for="Name" required maxlength="80" placeholder="Ví dụ: Thiết bị văn phòng" /><span asp-validation-for="Name"></span></div>
+<div class="field"><label asp-for="Description"></label><textarea asp-for="Description" rows="3" maxlength="300"></textarea></div>
+<div class="form-actions"><button class="button primary" type="submit">Lưu danh mục</button><a class="button" asp-action="Index">Hủy</a></div></form>
