@@ -166,6 +166,7 @@ Mở lịch sử Jenkins gồm một lần thành công và hai lần thất b�
 | Deploy có mất dữ liệu không? | SQLite/keys ở thư mục ngoài code; config Production và App_Data được loại khỏi đồng bộ/xóa. |
 | Nếu deploy lỗi? | Script thử khôi phục code cũ và health check; vẫn báo pipeline thất bại. Không tự rollback thay đổi schema dữ liệu. |
 | Vì sao CSS phải dùng `~/`? | Tag Helper sinh URL theo PathBase `/webbanhang`, hoạt động khi app là IIS sub-application. |
+| Vì sao Checkout lấy main trước khi lấy nhánh lỗi? | Giữ main trong danh sách SCM được theo dõi; checkout nhánh lỗi đặt poll/changelog=false để lượt demo lỗi không làm job ngừng theo dõi main. |
 | Ba nhánh có chứng minh ba sinh viên? | Không. Nhánh/PR chứng minh quy trình; nhóm phải phân công và commit bằng tài khoản của từng người thật. |
 
 ## 8. Ảnh cần nộp và xử lý lỗi
@@ -188,5 +189,6 @@ Chụp đúng kết quả thật: GitHub nhánh/PR, Jenkins Job SCM/trigger, Sta
 
 - Jenkins WAR/Java: https://www.jenkins.io/doc/book/installing/war-file/
 - GitHub trigger: https://plugins.jenkins.io/github/
+- Checkout/polling: https://www.jenkins.io/doc/pipeline/steps/workflow-scm-step/
 - IIS/Hosting Bundle/sub-application: https://learn.microsoft.com/aspnet/core/host-and-deploy/iis/?view=aspnetcore-8.0
 - Non-admin SDK installation: https://learn.microsoft.com/dotnet/core/tools/dotnet-install-script
