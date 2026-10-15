@@ -7,13 +7,21 @@ namespace WebBanHang.Controllers;
 
 public class CategoriesController(StoreDbContext db) : Controller
 {
-    public async Task<IActionResult> Index() => View(await db.Categories.Include(c => c.Products).OrderBy(c => c.Name).ToListAsync());
+    public async Task<IActionResult> Index(string? q)
+    {
+        var categories = db.Categories.Include(c => c.Products).AsQueryable();
+        if (!string.IsNullOrWhiteSpace(q)) categories = categories.Where(c => c.Name.Contains(q.Trim()));
+        ViewBag.Query = q;
+        return View(await categories.OrderBy(c => c.Name).ToListAsync());
+    }
     public IActionResult Create() => View("Edit", new Category());
     public async Task<IActionResult> Edit(int id) => await db.Categories.FindAsync(id) is { } c ? View(c) : NotFound();
     [HttpPost]
     public async Task<IActionResult> Save([Bind("Id,Name,Description")] Category input)
     {
         if (!ModelState.IsValid) return View("Edit", input);
+        input.Name = input.Name.Trim();
+        input.Description = input.Description?.Trim();
         if (await db.Categories.AnyAsync(c => c.Name == input.Name && c.Id != input.Id))
         { ModelState.AddModelError("Name", "Tên danh mục đã tồn tại."); return View("Edit", input); }
         if (input.Id == 0) db.Categories.Add(input);
