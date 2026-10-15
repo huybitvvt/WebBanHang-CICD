@@ -8,6 +8,10 @@ Repository: https://github.com/huybitvvt/WebBanHang-CICD (private).
 
 Trên máy hiện tại có thể nhấp đúp **CHAY-DEMO.cmd** để chạy. Giữ cửa sổ mở và truy cập URL bên dưới.
 
+Jenkins portable đã được cấu hình trên máy này: nhấp đúp **CHAY-JENKINS.cmd**, mở **http://localhost:8080/job/WebBanHang-CICD/**. Tài khoản ở file riêng tư `.local/jenkins-login.json` (mở bằng Notepad, không đưa lên Git/ảnh báo cáo). Job đã có ba lần chạy thật: main thành công, lỗi build, lỗi test. Trên máy chưa có IIS, `DEPLOY_TO_IIS` mặc định tắt.
+
+Sau khi bạn cấu hình ngrok authtoken trên máy, nhấp đúp **CHAY-WEBHOOK.cmd**. Script khởi động relay có chữ ký, tunnel ngrok và tạo/cập nhật webhook của repo qua GitHub CLI đang đăng nhập; giữ cửa sổ mở. Secret nằm trong `.local/webhook-secret.txt`, không đưa lên Git.
+
 ## Chạy ngay trên máy hiện tại
 
 ```powershell
@@ -55,6 +59,7 @@ Không merge `demo/build-failure` hoặc `demo/test-failure` vào main. Jenkins 
 | `scripts/Deploy-IIS.ps1` | Backup, app_offline, đồng bộ code, giữ config/data, xác minh, rollback code khi lỗi |
 | `scripts/Verify-Deployment.ps1` | Health/database, đúng version, homepage và CSS |
 | `scripts/Start-Jenkins.ps1` | Chạy Jenkins WAR ở loopback, giữ cơ chế đăng nhập/setup wizard |
+| `scripts/Start-WebhookDemo.ps1` | Khởi động relay/ngrok và cấu hình webhook qua GitHub CLI |
 | `scripts/webhook-relay.mjs` | Endpoint webhook xác thực chữ ký; không công khai Jenkins UI |
 | `docs/HUONG-DAN-DEMO.md` | Kịch bản trình bày 10–12 phút và khắc phục lỗi |
 | `docs/BAO-CAO-KIEM-THU.md` | Kết quả đã kiểm tra và phần minh chứng cần bổ sung trên IIS |

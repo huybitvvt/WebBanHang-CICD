@@ -8,7 +8,7 @@ Ngày lập: **15/10/2026**. Các mục chưa chạy được ghi rõ, không co
 - .NET SDK 8.0.426 cài riêng tại `.tools/dotnet` (không thay SDK hệ thống).
 - Runtime mục tiêu .NET 8, Entity Framework Core SQLite 8.0.28.
 - Git và GitHub CLI có sẵn; repository riêng tư theo URL trong README.
-- Chưa có dịch vụ IIS/Jenkins, chưa xác minh Hosting Bundle/Java và webhook Internet trên máy này.
+- Jenkins **2.580.1** chạy portable, Java 21 JRE portable, 66 plugin đã được cài; Java/Jenkins được đối chiếu SHA-256 khi tải. Chưa có IIS/Hosting Bundle để triển khai thật.
 
 ## Kết quả thực thi
 
@@ -27,7 +27,8 @@ Nhật ký/TRX sinh tại `artifacts/` (không đưa output build vào Git). Ả
 | Nhánh sai tính tiền | Build PASS, Test FAIL 4/28 đúng dự kiến; kỳ vọng 180000, thực tế 220000; bản Kestrel nền giữ nguyên |
 | Đồng bộ file và rollback deploy | 3/3 kiểm tra Node PASS (gồm test cha), dùng robocopy thật và HTTP endpoint giả lập; giữ App_Data, logs, config Production, thay code và khôi phục code khi version sai |
 | Verify trên bản publish Kestrel | PASS: health/database, homepage=200, CSS=200 dưới /webbanhang |
-| Jenkins Job thực tế | Chưa chạy; cần Java/Jenkins |
+| Jenkins Job thực tế | PASS: job WebBanHang-CICD lấy mã từ GitHub private, build #1 main SUCCESS, #2 lỗi cú pháp FAILURE tại Build, #3 sai công thức FAILURE tại Test; Deploy/Verify tắt vì chưa có IIS |
+| Khởi động lại Jenkins | Cấu hình đăng nhập, Credentials và lịch sử build được lưu; khởi động qua CHAY-JENKINS.cmd/scripts/Start-Jenkins.ps1 |
 | IIS thực tế | Chưa chạy; cần máy hỗ trợ IIS + quyền admin |
 | Webhook GitHub qua Internet | Chưa chạy; cần Jenkins, ngrok và secret |
 
@@ -59,8 +60,11 @@ Repo/nhánh/PR do một tài khoản tạo chỉ là minh họa quy trình. Khô
 - `feature/products`: https://github.com/huybitvvt/WebBanHang-CICD/pull/2 (merged).
 - `feature/orders`: https://github.com/huybitvvt/WebBanHang-CICD/pull/3 (merged).
 - Hai nhánh demo lỗi đã push riêng: `demo/build-failure`, `demo/test-failure`; không merge vào main.
+- Đã thử clone mới và tái sử dụng hai nhánh demo từ origin, không tạo lại/ghi đè nhánh lỗi.
 - Khi nộp repo private, cấp quyền cho giảng viên và thành viên nhóm; chưa thay đổi quyền truy cập thay người dùng.
 
 ## Giới hạn kiểm chứng
 
-Chưa chạy Jenkins thực tế, IIS, hay webhook qua Internet. Test file deployment dùng endpoint giả lập chỉ chứng minh logic đồng bộ/giữ dữ liệu/rollback, không chứng minh Hosting Bundle hoặc IIS đã hoạt động. Cần hoàn thành phần 3–6 của hướng dẫn trên máy IIS và bổ sung ảnh đúng URL đề.
+Đã chạy Jenkins thật với GitHub và ba tình huống. Chưa chạy IIS hoặc webhook qua Internet; ngrok ban đầu báo ERR_NGROK_4018 và người dùng đang tự cấu hình đăng nhập. Test file deployment dùng endpoint giả lập chỉ chứng minh logic đồng bộ/giữ dữ liệu/rollback, không chứng minh Hosting Bundle hoặc IIS đã hoạt động. Cần hoàn thành phần 3–6 của hướng dẫn trên máy IIS và bổ sung ảnh đúng URL đề.
+
+Lưu ý: API Stage View có thể đánh dấu các stage sau lỗi là FAILED. Console Output ghi rõ `Stage "Publish" skipped due to earlier failure(s)` và không thực thi lệnh publish/deploy; dùng Console Output để xác nhận cổng kiểm soát chất lượng.

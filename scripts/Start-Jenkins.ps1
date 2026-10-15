@@ -23,7 +23,7 @@ $localSdk = Join-Path $tools 'dotnet'
 if (Test-Path (Join-Path $localSdk 'dotnet.exe')) { $env:DOTNET_ROOT = $localSdk; $env:PATH = $localSdk + ';' + $env:PATH }
 $env:WEBBANHANG_CI_ONLY = if (Get-Service W3SVC -ErrorAction SilentlyContinue) { 'false' } else { 'true' }
 Write-Host "Jenkins: http://localhost:$Port (loopback only). Keep this terminal open."
-Write-Host "Unlock password file: $env:JENKINS_HOME\secrets\initialAdminPassword"
 if (Test-Path (Join-Path $root '.local\jenkins-login.json')) { Write-Host 'Existing demo login: .local\jenkins-login.json (keep private).' }
-& $javaExe -jar $war "--httpPort=$Port" --httpListenAddress=127.0.0.1
+else { Write-Host "Unlock password file: $env:JENKINS_HOME\secrets\initialAdminPassword" }
+& $javaExe '-Duser.timezone=Asia/Ho_Chi_Minh' -jar $war "--httpPort=$Port" --httpListenAddress=127.0.0.1
 if ($LASTEXITCODE -ne 0) { throw 'Jenkins stopped unexpectedly.' }

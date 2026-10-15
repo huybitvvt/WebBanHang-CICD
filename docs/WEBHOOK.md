@@ -1,5 +1,21 @@
 # GitHub Webhook qua ngrok
 
+## Khởi động nhanh
+
+Trên máy hiện tại có Node.js, ngrok và GitHub CLI: sau khi cấu hình ngrok authtoken tại terminal riêng, nhấp đúp `CHAY-WEBHOOK.cmd` hoặc chạy:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\Start-WebhookDemo.ps1
+```
+
+Script khởi động relay/tunnel, dùng tài khoản GitHub CLI để tạo/cập nhật webhook của repo và gửi ping. Secret được giữ tại `.local/webhook-secret.txt`, chỉ tài khoản Windows hiện tại và SYSTEM được cấp quyền. Log riêng tư nằm tại `.local/webhook/ngrok.log`. Không mở thêm relay/ngrok khác cùng cổng 8787/4040.
+
+Giữ cửa sổ mở; Ctrl+C dừng tunnel và relay do script tạo. Mỗi lần khởi động, URL webhook được cập nhật theo tunnel hiện tại. Chỉ dòng `Webhook ready` chưa chứng minh build đã chạy: kiểm tra Recent Deliveries và merge một PR vào main.
+
+Ngrok hiện cần người dùng tự hoàn tất đăng nhập; lần thử ban đầu báo ERR_NGROK_4018. Không gửi authtoken vào chat hoặc Git.
+
+## Cấu hình thủ công
+
 Không tunnel cổng Jenkins 8080 trực tiếp. Jenkins WAR trong bộ này chỉ nghe loopback. Relay Node.js xác thực HMAC SHA-256 trên raw body, kiểm tra repo, chỉ chuyển push lên main, giới hạn 1 MiB và bỏ qua delivery trùng trong bộ nhớ một giờ. Relay không cung cấp giao diện quản trị Jenkins.
 
 Cần Node.js 22+, ngrok CLI đã đăng nhập, Jenkins đã chạy, job đã chạy build đầu để đăng ký SCM/trigger.

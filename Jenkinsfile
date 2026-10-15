@@ -21,10 +21,14 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    def revision = checkout([$class: 'GitSCM',
-                        branches: [[name: "*/${params.SOURCE_BRANCH}"]],
-                        userRemoteConfigs: scm.userRemoteConfigs,
-                        extensions: [[$class: 'PruneStaleBranch']]])
+                    // Always track main for webhook polling, even after a manual failure-branch build.
+                    def revision = checkout scm
+                    if (params.SOURCE_BRANCH != 'main') {
+                        revision = checkout(scm: [$class: 'GitSCM',
+                            branches: [[name: "origin/${params.SOURCE_BRANCH}"]],
+                            userRemoteConfigs: scm.userRemoteConfigs,
+                            extensions: [[$class: 'PruneStaleBranch']]], poll: false, changelog: false)
+                    }
                     env.RELEASE_VERSION = "1.0.${env.BUILD_NUMBER}+${revision.GIT_COMMIT}"
                     currentBuild.description = "${params.SOURCE_BRANCH} · ${revision.GIT_COMMIT.take(8)}"
                 }

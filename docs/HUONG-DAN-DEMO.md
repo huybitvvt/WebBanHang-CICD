@@ -64,6 +64,10 @@ Kiểm tra Default Web Site có HTTP binding cổng 80. Nếu cổng bị chiế
 
 ## 4. Tạo Jenkins Job
 
+**Riêng máy hiện tại đã làm sẵn:** Jenkins 2.580.1, Java 21 portable và plugin đã nằm trong `.tools`/`.local`, job đã kết nối GitHub và chạy ba tình huống thật. Nhấp đúp `CHAY-JENKINS.cmd` → mở `http://localhost:8080/job/WebBanHang-CICD/`. Mở `.local/jenkins-login.json` bằng Notepad để lấy tài khoản; không chụp/commit mật khẩu. Nếu Jenkins đang chạy thì không mở thêm bản thứ hai. `DEPLOY_TO_IIS` mặc định tắt khi không phát hiện dịch vụ IIS.
+
+Các bước bên dưới dành cho cài mới trên máy khác. Các thư mục `.tools` và `.local` chứa công cụ, cấu hình và bí mật cục bộ, không nằm trên GitHub.
+
 Có thể dùng Jenkins Windows Installer từ https://www.jenkins.io/download/ hoặc bản WAR không cần cài service:
 
 ```powershell
@@ -84,6 +88,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts\Start-Jenkins.ps1
 `DEPLOY_TO_IIS=false` chỉ kiểm tra CI/Publish, hai bước cuối bị skip. Không dùng kết quả đó để tuyên bố đã triển khai IIS.
 
 ## 5. GitHub Webhook
+
+**Cách nhanh trên máy này:** cấu hình ngrok authtoken trong terminal riêng, rồi nhấp đúp `CHAY-WEBHOOK.cmd`. Script dùng tài khoản GitHub CLI hiện tại để tạo/cập nhật webhook của repo, lưu secret riêng tư và chỉ tunnel relay cổng 8787. Giữ Jenkins và cửa sổ webhook chạy. Không khởi động đồng thời relay thủ công ở cùng cổng. Nếu ngrok chưa đăng nhập, script dừng và ghi log riêng tư tại `.local/webhook/ngrok.log`.
 
 Máy Jenkins localhost cần URL HTTPS GitHub truy cập được. Có thể dùng ngrok, nhưng chỉ công khai endpoint webhook, giữ giao diện quản trị ở loopback.
 
