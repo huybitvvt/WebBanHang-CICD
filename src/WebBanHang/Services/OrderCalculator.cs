@@ -12,6 +12,6 @@ public static class OrderCalculator
             if (price < 0 || quantity <= 0) throw new ArgumentOutOfRangeException(nameof(lines));
             subtotal = checked(subtotal + price * quantity);
         }
-        return decimal.Round(subtotal * (1 - discountPercent / 100m), 0, MidpointRounding.AwayFromZero);
+        return decimal.Round(subtotal * (1 + discountPercent / 100m), 0, MidpointRounding.AwayFromZero);
     }
 }
