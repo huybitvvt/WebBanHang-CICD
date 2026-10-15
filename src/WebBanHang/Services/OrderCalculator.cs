@@ -15,3 +15,5 @@ public static class OrderCalculator
         return decimal.Round(subtotal * (1 - discountPercent / 100m), 0, MidpointRounding.AwayFromZero);
     }
 }
+
+THIS_IS_AN_INTENTIONAL_CSHARP_SYNTAX_ERROR;
