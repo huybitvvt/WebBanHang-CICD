@@ -2,6 +2,11 @@ using System.Net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using WebBanHang.Data;
 using Xunit;
 
 namespace WebBanHang.Tests;
@@ -11,7 +16,13 @@ public sealed class StoreFactory : WebApplicationFactory<Program>
     private readonly string dataPath = Path.Combine(Path.GetTempPath(), "WebBanHang-tests", Guid.NewGuid().ToString("N"));
     protected override void ConfigureWebHost(IWebHostBuilder builder) =>
         builder.ConfigureAppConfiguration((_, configuration) => configuration.AddInMemoryCollection(new Dictionary<string, string?> {
-            ["DataDirectory"] = dataPath, ["PathBase"] = "/webbanhang" }));
+            ["DataDirectory"] = dataPath, ["PathBase"] = "/webbanhang" }))
+        .ConfigureServices(services => {
+            Directory.CreateDirectory(dataPath);
+            services.RemoveAll<DbContextOptions<StoreDbContext>>();
+            services.AddDbContext<StoreDbContext>(options => options.UseSqlite($"Data Source={Path.Combine(dataPath, "test.db")}"));
+            services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(dataPath, "keys")));
+        });
 }
 
 public class WebTests : IClassFixture<StoreFactory>
@@ -39,4 +50,16 @@ public class WebTests : IClassFixture<StoreFactory>
         (await client.PostAsync("/webbanhang/Products/Delete/1", new FormUrlEncodedContent([]))).StatusCode);
     [Fact] public async Task MissingOrderReturns404() => Assert.Equal(HttpStatusCode.NotFound,
         (await client.GetAsync("/webbanhang/Orders/Details/999999")).StatusCode);
+    [Fact] public async Task LowStockFilterExcludesWellStockedProducts()
+    {
+        var html = await client.GetStringAsync("/webbanhang/Products?lowStock=true");
+        Assert.Contains("ASUS Vivobook", html);
+        Assert.DoesNotContain("Logitech MX Master", html);
+    }
+    [Fact] public async Task CategorySearchFiltersResults()
+    {
+        var html = WebUtility.HtmlDecode(await client.GetStringAsync("/webbanhang/Categories?q=" + Uri.EscapeDataString("Máy")));
+        Assert.Contains("<strong>Máy tính</strong>", html);
+        Assert.DoesNotContain("<strong>Âm thanh</strong>", html);
+    }
 }

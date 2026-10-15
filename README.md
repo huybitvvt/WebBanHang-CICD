@@ -6,6 +6,8 @@ Repository: https://github.com/huybitvvt/WebBanHang-CICD (private).
 
 **Bắt đầu đọc [hướng dẫn demo trên lớp](docs/HUONG-DAN-DEMO.md).** Có đầy đủ chuẩn bị môi trường, lời thuyết trình, lệnh thao tác và ba tình huống thành công/thất bại.
 
+Trên máy hiện tại có thể nhấp đúp **CHAY-DEMO.cmd** để chạy. Giữ cửa sổ mở và truy cập URL bên dưới.
+
 ## Chạy ngay trên máy hiện tại
 
 ```powershell
@@ -26,9 +28,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts\Install-DotNet.ps1
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts\Test-Local.ps1
 node --test tests\webhook-relay.test.mjs
+node --test tests\deployment.test.mjs
 ```
 
 Lệnh đầu chạy Restore → Build Release → Test → Publish, dừng ngay khi lệnh lỗi. TRX nằm ở `artifacts/TestResults`, publish ở `artifacts/publish`.
+
+Test deploy dùng robocopy thật trên thư mục thử nghiệm và HTTP endpoint giả lập để kiểm tra giữ config/data, thay code và rollback; không thay thế kiểm tra IIS.
 
 Sau khi có Git repository/main, tạo và kiểm tra hai nhánh lỗi độc lập:
 

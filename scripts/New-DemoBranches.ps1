@@ -7,9 +7,19 @@ function Git-Checked {
 }
 foreach ($scenario in @('build-failure', 'test-failure')) {
     $branch = "demo/$scenario"
-    & git show-ref --verify --quiet "refs/heads/$branch"
-    if ($LASTEXITCODE -eq 0) { Write-Host "$branch already exists; preserving it."; continue }
     $worktree = Join-Path $script:ProjectRoot ".local\scenarios\$scenario"
+    & git show-ref --verify --quiet "refs/heads/$branch"
+    if ($LASTEXITCODE -eq 0) {
+        if (-not (Test-Path -LiteralPath $worktree)) { Git-Checked worktree add $worktree $branch }
+        Write-Host "$branch already exists; preserving it."
+        continue
+    }
+    & git show-ref --verify --quiet "refs/remotes/origin/$branch"
+    if ($LASTEXITCODE -eq 0) {
+        Git-Checked worktree add -b $branch $worktree "origin/$branch"
+        Write-Host "Reused existing GitHub scenario: $branch"
+        continue
+    }
     Git-Checked worktree add -b $branch $worktree main
     if ($scenario -eq 'build-failure') {
         $file = Join-Path $worktree 'src\WebBanHang\Services\OrderCalculator.cs'

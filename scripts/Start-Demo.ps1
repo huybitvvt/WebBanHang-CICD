@@ -4,4 +4,5 @@ Set-Location $script:ProjectRoot
 $env:ASPNETCORE_ENVIRONMENT = 'Development'
 $env:PathBase = '/webbanhang'
 Write-Host "Open http://localhost:$Port/webbanhang (Kestrel local rehearsal; IIS is separate)."
-Invoke-DotNet run --project src/WebBanHang --urls "http://localhost:$Port"
+if (-not (Test-Path 'src/WebBanHang/obj/project.assets.json')) { Invoke-DotNet restore WebBanHang.sln --locked-mode }
+Invoke-DotNet run --project src/WebBanHang --no-restore --no-launch-profile --urls "http://localhost:$Port"

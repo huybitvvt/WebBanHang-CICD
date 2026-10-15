@@ -12,19 +12,21 @@ Ngày lập: **15/10/2026**. Các mục chưa chạy được ghi rõ, không co
 
 ## Kết quả thực thi
 
-Kết quả cuối cùng và ảnh trình duyệt được cập nhật sau khi chạy các kiểm tra. Nhật ký/TRX sinh tại `artifacts/` (không đưa output build vào Git).
+Nhật ký/TRX sinh tại `artifacts/` (không đưa output build vào Git). Ảnh trình duyệt thật nằm trong [evidence](evidence/README.md).
 
 | Kiểm tra | Kết quả |
 |---|---|
-| Restore package lock | Chờ cập nhật kết quả |
-| Build Release | Chờ cập nhật kết quả |
-| Unit/integration .NET | Chờ cập nhật kết quả |
-| Publish | Chờ cập nhật kết quả |
+| Restore package lock | PASS với --locked-mode |
+| Build Release | PASS, 0 warning / 0 error |
+| Unit/integration .NET | 30/30 PASS trên main |
+| Publish | PASS, artifacts/publish có DLL, web.config và static assets |
 | Relay webhook | 9/9 kiểm tra Node pass, gồm cả test cha |
 | PowerShell syntax | Các script parse thành công |
-| CRUD bằng trình duyệt / desktop & mobile | Chờ cập nhật kết quả |
-| Nhánh lỗi cú pháp | Chờ cập nhật kết quả |
-| Nhánh sai tính tiền | Chờ cập nhật kết quả |
+| CRUD bằng trình duyệt / desktop & mobile | PASS trên Edge thật, desktop 1440 và mobile 375, không có lỗi JavaScript; giá trị đơn 180000, tồn kho 10 → 8 → 10 |
+| Nhánh lỗi cú pháp | Build FAIL đúng dự kiến với CS0116/CS1022; bản Kestrel nền vẫn Healthy, version không đổi |
+| Nhánh sai tính tiền | Build PASS, Test FAIL 4/28 đúng dự kiến; kỳ vọng 180000, thực tế 220000; bản Kestrel nền giữ nguyên |
+| Đồng bộ file và rollback deploy | 3/3 kiểm tra Node PASS (gồm test cha), dùng robocopy thật và HTTP endpoint giả lập; giữ App_Data, logs, config Production, thay code và khôi phục code khi version sai |
+| Verify trên bản publish Kestrel | PASS: health/database, homepage=200, CSS=200 dưới /webbanhang |
 | Jenkins Job thực tế | Chưa chạy; cần Java/Jenkins |
 | IIS thực tế | Chưa chạy; cần máy hỗ trợ IIS + quyền admin |
 | Webhook GitHub qua Internet | Chưa chạy; cần Jenkins, ngrok và secret |
@@ -49,3 +51,16 @@ Trong nhánh test lỗi: `100000 × 2 × (1 − 10/100) = 180000`; mã sai dùng
 - GitHub webhook Recent Deliveries thành công và build tự khởi chạy sau merge.
 
 Repo/nhánh/PR do một tài khoản tạo chỉ là minh họa quy trình. Không dùng chúng làm bằng chứng có ba người phát triển.
+
+## GitHub đã tạo
+
+- Repository private: https://github.com/huybitvvt/WebBanHang-CICD
+- `feature/categories`: https://github.com/huybitvvt/WebBanHang-CICD/pull/1 (merged).
+- `feature/products`: https://github.com/huybitvvt/WebBanHang-CICD/pull/2 (merged).
+- `feature/orders`: https://github.com/huybitvvt/WebBanHang-CICD/pull/3 (merged).
+- Hai nhánh demo lỗi đã push riêng: `demo/build-failure`, `demo/test-failure`; không merge vào main.
+- Khi nộp repo private, cấp quyền cho giảng viên và thành viên nhóm; chưa thay đổi quyền truy cập thay người dùng.
+
+## Giới hạn kiểm chứng
+
+Chưa chạy Jenkins thực tế, IIS, hay webhook qua Internet. Test file deployment dùng endpoint giả lập chỉ chứng minh logic đồng bộ/giữ dữ liệu/rollback, không chứng minh Hosting Bundle hoặc IIS đã hoạt động. Cần hoàn thành phần 3–6 của hướng dẫn trên máy IIS và bổ sung ảnh đúng URL đề.

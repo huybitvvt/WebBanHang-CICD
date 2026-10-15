@@ -2,7 +2,8 @@ param(
     [Parameter(Mandatory = $true)][string]$PublishPath,
     [string]$DeployPath = 'C:\wwwroot\webbanhang',
     [string]$VerifyUrl = 'http://localhost/webbanhang/health',
-    [string]$ExpectedVersion = ''
+    [string]$ExpectedVersion = '',
+    [ValidateRange(1, 60)][int]$VerifyAttempts = 20
 )
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
@@ -16,11 +17,12 @@ if ((Get-Item -LiteralPath $target).Attributes -band [IO.FileAttributes]::Repars
 $backup = Join-Path (Split-Path -Parent $target) ('webbanhang-backups\' + (Get-Date -Format 'yyyyMMdd-HHmmss-fff'))
 New-Item -ItemType Directory -Force -Path $backup | Out-Null
 $offline = Join-Path $target 'app_offline.htm'
+if (Test-Path -LiteralPath $offline) { throw 'An existing app_offline.htm indicates maintenance or an unfinished deployment. Inspect it before retrying.' }
 $hadRelease = Test-Path -LiteralPath (Join-Path $target 'WebBanHang.dll')
 $reservedDirectories = @('App_Data', 'logs')
 $reservedFiles = @('appsettings.Production.json', 'app_offline.htm')
 function Copy-Release([string]$From, [string]$To, [switch]$Mirror) {
-    $copyArguments = @($From, $To, '/E', '/R:10', '/W:2', '/NP', '/NFL', '/NDL', '/XD') + $reservedDirectories + @('/XF') + $reservedFiles
+    $copyArguments = @($From, $To, '/E', '/IS', '/IT', '/R:10', '/W:2', '/NP', '/NFL', '/NDL', '/XD') + $reservedDirectories + @('/XF') + $reservedFiles
     if ($Mirror) { $copyArguments += '/PURGE' }
     & robocopy.exe @copyArguments | Out-Host
     if ($LASTEXITCODE -ge 8) { throw "Robocopy failed: $LASTEXITCODE" }
@@ -32,7 +34,7 @@ try {
     Start-Sleep -Seconds 3
     Copy-Release $source $target -Mirror
     Remove-Item -LiteralPath $offline -Force
-    & "$PSScriptRoot\Verify-Deployment.ps1" -Url $VerifyUrl -ExpectedVersion $ExpectedVersion
+    & "$PSScriptRoot\Verify-Deployment.ps1" -Url $VerifyUrl -ExpectedVersion $ExpectedVersion -Attempts $VerifyAttempts
     Write-Host "Deployment succeeded. Previous release backup: $backup"
 } catch {
     $failure = $_

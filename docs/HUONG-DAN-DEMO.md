@@ -21,6 +21,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts\Install-DotNet.ps1
 
 ## 2. Tập thao tác ứng dụng ngay trên máy hiện tại
 
+Cách nhanh: nhấp đúp `CHAY-DEMO.cmd` trong thư mục dự án. Hoặc chạy lệnh sau:
+
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts\Start-Demo.ps1
 ```
@@ -132,6 +134,8 @@ Nhánh `demo/build-failure` đã có lỗi cú pháp C# thật. Trong Jenkins �
 Kỳ vọng: Checkout/Restore xanh, **Build đỏ**, Test/Publish/Deploy/Verify không chạy. Mở Console Output để chỉ lỗi C#. F5 website IIS và health: bản thành công ở phần B vẫn hoạt động, version không đổi.
 
 Nói: “Pipeline dừng theo exit code của compiler nên mã lỗi chưa thể tới bước deploy.”
+
+Lưu ý: hai nhánh lỗi được tạo từ bản main có 28 test. Main hiện có thêm hai kiểm tra bộ lọc và chạy 30 test; chênh lệch này là do thời điểm tạo nhánh.
 
 ### Phần D — Test thất bại (2 phút)
 
