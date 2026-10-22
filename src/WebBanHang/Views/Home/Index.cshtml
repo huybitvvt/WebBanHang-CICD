@@ -1,7 +1,7 @@
 @model DashboardViewModel
 @inject IConfiguration Configuration
 @{ ViewData["Title"] = "Tổng quan"; }
-<div class="page-heading"><div><p class="eyebrow">TỔNG QUAN CỬA HÀNG</p><h1>Mọi thứ trong tầm tay<span class="accent">.</span></h1><p class="muted">@Configuration["Store:Announcement"]</p></div><a class="button primary" asp-controller="Orders" asp-action="Create">+ Tạo đơn hàng</a></div>
+<div class="page-heading"><div><p class="eyebrow">TỔNG QUAN CỬA HÀNG</p><h1>Mọi thứ trong tầm tay 2026<span class="accent">.</span></h1><p class="muted">@Configuration["Store:Announcement"]</p></div><a class="button primary" asp-controller="Orders" asp-action="Create">+ Tạo đơn hàng</a></div>
 <div class="stats-grid">
     <article class="stat"><span>Giá trị đơn hàng</span><strong>@Model.Revenue.ToString("N0") <small>đ</small></strong><span class="stat-note">Không gồm đơn đã hủy</span></article>
     <article class="stat"><span>Đơn hàng</span><strong>@Model.OrderCount.ToString("D2")</strong><span class="stat-note">Tất cả trạng thái</span></article>
